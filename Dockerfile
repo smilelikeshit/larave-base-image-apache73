@@ -16,6 +16,7 @@ RUN apt-get update && apt-get install curl -y
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 10.15.2
 
+RUN nvm alias default $NODE_VERSION
 
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
 
