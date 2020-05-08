@@ -8,6 +8,17 @@ ENV TZ=Asia/Jakarta
 
 RUN ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
 
+RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+
+RUN apt-get update && apt-get install curl -y
+
+# nvm environment variables
+ENV NVM_DIR /usr/local/nvm
+ENV NODE_VERSION 10.15.2
+
+
+RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+
 # Install package for php
 RUN apt-get update && apt-get install -y libxml2-dev wget \
         libzip-dev libpq-dev \
@@ -38,7 +49,7 @@ RUN apt-get update && apt-get install -y libxml2-dev wget \
         && docker-php-ext-enable mcrypt \ 
         && apt-get purge -y \
         && rm -r /var/lib/apt/lists/*
-
+# add mc client
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && ./mc --help
 
 
