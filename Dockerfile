@@ -55,9 +55,7 @@ RUN a2enmod rewrite && mv /usr/local/etc/php/php.ini-production /usr/local/etc/p
 ADD composer.phar /var/www/html/
 RUN  php composer.phar -V 
 
-RUN  apt-get remove curl wget -y \
-     && apt-get autoremove -y \
-     && apt-get purge -y \
+RUN  apt-get purge -y \
      && rm -r /var/lib/apt/lists/*
 
 EXPOSE 80
