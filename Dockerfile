@@ -20,7 +20,7 @@ ENV NODE_VERSION 10.15.2
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
 
 # Install package for php
-RUN apt-get update && apt-get install -y libxml2-dev wget \
+RUN apt-get install -y libxml2-dev \
         libzip-dev libpq-dev \
         libmcrypt-dev \
         libmagickwand-dev \
@@ -28,30 +28,19 @@ RUN apt-get update && apt-get install -y libxml2-dev wget \
         libssl-dev zlib1g-dev \
         libpng-dev libjpeg-dev \
         libfreetype6-dev \
-
-        libzip-dev \
-
-        #https://github.com/docker-library/php/issues/880 
-        libonig-dev \
+        git \
         zip \
-        # add package cron #
         cron \
+        vim \
         --no-install-recommends \
-        # mcrypt 1.0.3 for php version => 7.4.2
-        && pecl install mcrypt-1.0.3 \
-        # https://github.com/docker-library/php/issues/931
-        && docker-php-ext-configure gd --with-jpeg=/usr/include/ --with-freetype=/usr/include/ \
-        #&& docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
-
-        # https://stackoverflow.com/questions/48700453/docker-image-build-with-php-zip-extension-shows-bundled-libzip-is-deprecated-w
-        && docker-php-ext-configure zip \ 
+        && pecl install mcrypt-1.0.2 \
+        && docker-php-ext-configure gd --with-freetype-dir=/usr/include/ --with-jpeg-dir=/usr/include/ \
+        && docker-php-ext-configure zip --with-libzip \ 
         && docker-php-ext-install pdo_mysql pdo_pgsql pgsql gd xml zip mbstring exif \
-        && docker-php-ext-enable mcrypt \ 
-        && apt-get purge -y \
-        && rm -r /var/lib/apt/lists/*
+        && docker-php-ext-enable mcrypt
+       
 # add mc client
 RUN wget https://dl.min.io/client/mc/release/linux-amd64/mc && chmod +x mc && ./mc --help
-
 
 # Enable rewrite module apache #
 RUN a2enmod rewrite && mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
@@ -64,5 +53,10 @@ RUN a2enmod rewrite && mv /usr/local/etc/php/php.ini-production /usr/local/etc/p
 # add composer.phar 
 ADD composer.phar /var/www/html/
 RUN  php composer.phar -V 
+
+RUN  apt-get remove curl wget bash-y \
+     && apt-get autoremove -y \
+     && apt-get purge -y \
+     && rm -r /var/lib/apt/lists/*
 
 EXPOSE 80
