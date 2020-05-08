@@ -16,9 +16,12 @@ RUN apt-get update && apt-get install curl -y
 ENV NVM_DIR /usr/local/nvm
 ENV NODE_VERSION 10.15.2
 
-RUN nvm alias default $NODE_VERSION
-
 RUN curl --silent -o- https://raw.githubusercontent.com/creationix/nvm/v0.31.2/install.sh | bash
+
+RUN source $NVM_DIR/nvm.sh \
+    && nvm install $NODE_VERSION \
+    && nvm alias default $NODE_VERSION \
+    && nvm use default
 
 # Install package for php
 RUN apt-get install -y libxml2-dev \
