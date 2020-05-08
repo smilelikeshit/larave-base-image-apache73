@@ -28,10 +28,6 @@ RUN apt-get install -y libxml2-dev \
         libssl-dev zlib1g-dev \
         libpng-dev libjpeg-dev \
         libfreetype6-dev \
-        git \
-        zip \
-        cron \
-        vim \
         wget \
         --no-install-recommends \
         && pecl install mcrypt-1.0.2 \
@@ -55,7 +51,7 @@ RUN a2enmod rewrite && mv /usr/local/etc/php/php.ini-production /usr/local/etc/p
 ADD composer.phar /var/www/html/
 RUN  php composer.phar -V 
 
-RUN  apt-get remove curl wget bash-y \
+RUN  apt-get remove curl wget bash -y \
      && apt-get autoremove -y \
      && apt-get purge -y \
      && rm -r /var/lib/apt/lists/*
