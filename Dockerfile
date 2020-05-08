@@ -38,7 +38,7 @@ RUN apt-get update && apt-get install -y libxml2-dev wget \
         && docker-php-ext-enable mcrypt \ 
         && apt-get purge -y \
         && rm -r /var/lib/apt/lists/*
-we
+        
 # Enable rewrite module apache #
 RUN a2enmod rewrite && mv /usr/local/etc/php/php.ini-production /usr/local/etc/php/php.ini \
     && sed -i -e 's/expose_php = On/expose_php = Off/' /usr/local/etc/php/php.ini \
